@@ -5,33 +5,79 @@
     body {
         font-size: 20px;
     }
+    label{
+        display: block;
+    }
     input{
         font-size: 20px;
+        display: block;
     }
     textarea{
         font-size: 20px;
     }
+    .formSpace{
+        margin-top:20px;
+    }
 </style>
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
 </head>
-<body>
+<body onload="getDetail()">
     <h1>R.K. Agrawal Patient System</h1>
-    <div>
+    <div class="formSpace">
     <label>First Name</label>
-    <input type="text">
+    <input type="text" id="FirstName">
     </div>
-    <br>
-    <div>
-    <label>Last Name</label>
-    <input type="text">
-    </div>
-    <br>
-    <div>
-    <label>Date of Birth</label>
-    <input type="datetime">
-    </div>
-    <br>
-    <br>
-    <div><label>Vist Information</label></div>
     
-    <textarea style="width:400px; height: 300px;" type="text"></textarea>
-</body></html>
+    <div class="formSpace">
+    <label>Last Name</label>
+    <input type="text" id="LastName">
+    </div>
+    
+    <div class="formSpace">
+        <label>Phone Number</label>
+        <input type="number" id="PhoneNumber">
+    </div>
+
+
+    <!--<div class="formSpace">
+    <label>Date of Birth</label>
+    <input type="date" id="datetime">
+    </div>-->
+    
+    <div class="formSpace"><label>Vist Information</label></div>
+    <textarea style="width:400px; height: 300px;" type="text" id="visitInfo"></textarea>
+    <div class="formSpace">
+    <button onclick="savePatient()">Save</button>
+    </div>
+</body>
+<script>
+    function getDetail(){
+        searchTerm = window.location.search.substr(1);
+        fetch('/patientlist?' + searchTerm).then(res => res.json().then(myjson => myjson.forEach(patient => setRecord(patient))));
+
+
+    }
+
+    function setRecord(record){
+        document.getElementById('visitInfo').innerText = record.VisitDescription;
+        $("#PhoneNumber").val(record.PhoneNumber);
+        $("#LastName").val(record.LastName);
+        $("#FirstName").val(record.FirstName);
+        
+    }
+
+    function savePatient(){
+
+        patient1 = {
+        LastName:$("#LastName").val() ,
+        FirstName: $("#FirstName").val(),
+        PhoneNumber: $("#PhoneNumber").val(),
+        VisitDescription: $("#visitInfo").val()
+   
+      }
+
+      $.post('/patient',patient1,function(data){if (data == "yes") {alert('Saved')}})
+
+    }
+</script>
+</html>

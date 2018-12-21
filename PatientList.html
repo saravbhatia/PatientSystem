@@ -1,0 +1,46 @@
+
+<!-- saved from url=(0035)http://192.168.1.43:3000/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        body {
+            font-size: 20px;
+        }
+        input{
+            font-size: 20px;
+        }
+        textarea{
+            font-size: 20px;
+        }
+    </style>
+     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+    </head>
+    <body onload="FetchPatients()"> 
+        <ul id='PatientList'>
+        </ul>
+    </body>
+    <script>
+        function FetchPatients(){
+            fetch('/patientlist').then(res => res.json().then(myjson => myjson.forEach(patient => AddPatient(patient))))
+        }
+
+        function AddPatient(patient) {
+            var ul = document.getElementById("PatientList");
+            
+            var li = document.createElement("li");
+            //li.appendChild(document.createTextNode(patient.LastName + ',' + patient.FirstName));
+            var link = document.createElement("a");
+            //link.setAttribute("href","")
+            //li.on("click",gotoDetails);
+           link.setAttribute("href", 'index.html?LastName=' + patient.LastName+'&FirstName='+patient.FirstName); // added line
+           link.innerText =  patient.LastName + ',' + patient.FirstName;
+           li.appendChild(link);
+           ul.appendChild(li);
+        }
+
+        function gotoDetails(e){
+            if(e == undefined) return;  
+            console.log(e.innerText);
+        }
+    </script>
+
+    </html>
